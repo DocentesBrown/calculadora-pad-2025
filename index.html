@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Puntaje Docente</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #24496e;
+      color: #4d3069;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #f3efdc;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 5px;
+    }
+
+    .subtitulo {
+      font-size: 1em;
+      color: #6d597a;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      font-size: 1em;
+      background-color: #da6863;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #b94e4a;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-align: center;
+      color: #4d3069;
+    }
+
+    #acciones-finales {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #acciones-finales a {
+      display: inline-block;
+      margin: 10px 5px 0;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .btn-instagram {
+      background-color: #da6863;
+      color: white;
+    }
+
+    .btn-whatsapp {
+      background-color: #3d8fb0;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Puntaje Docente</h1>
+    <div class="subtitulo">Diseñada por Docentes Brown</div>
+
+    <label for="titulo">Puntaje del título (cargo o materia):</label>
+    <input type="number" id="titulo" step="0.01">
+
+    <label for="bonificaciones">Puntaje por bonificaciones:</label>
+    <input type="number" id="bonificaciones" step="0.01">
+
+    <label for="antiguedad">Antigüedad (en años):</label>
+    <input type="number" id="antiguedad" step="0.01">
+
+    <label for="calificacion1">Primera calificación anual:</label>
+    <input type="number" id="calificacion1" step="0.01" min="0" max="10">
+
+    <label for="calificacion2">Segunda calificación anual:</label>
+    <input type="number" id="calificacion2" step="0.01" min="0" max="10">
+
+    <button onclick="calcularPuntaje()">Calcular Puntaje Total</button>
+
+    <div id="resultado"></div>
+
+    <div id="acciones-finales">
+      <p>¿Te gustó esta herramienta?</p>
+      <a class="btn-instagram" href="https://instagram.com/docentesbrown" target="_blank">@docentesbrown en Instagram</a>
+      <a id="whatsapp-link" class="btn-whatsapp" href="#" target="_blank">Compartir por WhatsApp</a>
+    </div>
+  </div>
+
+  <script>
+    function calcularPuntaje() {
+      const titulo = parseFloat(document.getElementById('titulo').value) || 0;
+      const bonificaciones = parseFloat(document.getElementById('bonificaciones').value) || 0;
+      const antiguedad = parseFloat(document.getElementById('antiguedad').value) || 0;
+      const calif1 = parseFloat(document.getElementById('calificacion1').value);
+      const calif2 = parseFloat(document.getElementById('calificacion2').value);
+
+      if (isNaN(calif1) || isNaN(calif2)) {
+        document.getElementById('resultado').textContent = "Por favor, ingresá ambas calificaciones.";
+        document.getElementById('acciones-finales').style.display = "none";
+        return;
+      }
+
+      const puntajeBase = titulo + bonificaciones + antiguedad;
+      const promedio = (calif1 + calif2) / 2;
+      const puntajeFinal = puntajeBase * promedio;
+      const puntajeTexto = puntajeFinal.toFixed(2);
+
+      document.getElementById('resultado').textContent = `El puntaje total es: ${puntajeTexto}`;
+
+      const mensaje = `Mi puntaje docente es ${puntajeTexto} calculado con la herramienta de @docentesbrown. ¡Probala vos también!`;
+      const url = "https://github.io/docentesbrown"; // Reemplazá por tu URL real
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(mensaje + " " + url)}`;
+
+      document.getElementById('whatsapp-link').href = whatsappUrl;
+      document.getElementById('acciones-finales').style.display = "block";
+    }
+  </script>
+</body>
+</html>
