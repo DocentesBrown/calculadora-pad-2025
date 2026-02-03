@@ -2,173 +2,460 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calculadora de Puntaje Docente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docentes Brown | Nueva Plataforma</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #24496e;
-      color: #4d3069;
+    :root{
+      --bg1:#0f2a44;
+      --bg2:#1c4b7a;
+      --card: rgba(255,255,255,.08);
+      --cardBorder: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.75);
+      --accent1:#00e0ff;
+      --accent2:#00b4d8;
+      --dark:#003c4a;
+      --shadow: 0 24px 70px rgba(0,0,0,.35);
+      --radius: 22px;
     }
 
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: #f3efdc;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(0,224,255,.12), transparent 60%),
+                  radial-gradient(900px 600px at 80% 70%, rgba(255,255,255,.08), transparent 55%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      overflow:hidden;
     }
 
-    h1 {
-      font-size: 1.8em;
-      margin-bottom: 5px;
+    /* ====== Soft floating blobs ====== */
+    .blob{
+      position:absolute;
+      inset:auto;
+      width:520px;height:520px;
+      border-radius:50%;
+      filter: blur(40px);
+      opacity:.22;
+      background: radial-gradient(circle at 30% 30%, var(--accent1), transparent 55%),
+                  radial-gradient(circle at 70% 70%, rgba(255,255,255,.18), transparent 60%);
+      animation: floaty 10s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .blob.b2{
+      width:420px;height:420px;
+      opacity:.16;
+      left:-120px; bottom:-140px;
+      animation-duration: 12s;
+    }
+    .blob.b1{
+      right:-140px; top:-120px;
+    }
+    @keyframes floaty{
+      0%,100%{transform: translateY(0) translateX(0) scale(1)}
+      50%{transform: translateY(18px) translateX(-10px) scale(1.03)}
     }
 
-    .subtitulo {
-      font-size: 1em;
-      color: #6d597a;
-      margin-bottom: 20px;
+    /* ====== Card ====== */
+    .wrap{
+      width: min(560px, 100%);
+      position:relative;
+      z-index:2;
+    }
+    .card{
+      background: var(--card);
+      border: 1px solid var(--cardBorder);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 34px 26px 22px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow:hidden;
     }
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 500;
+    /* ====== Top progress bar ====== */
+    .bar{
+      position:absolute;
+      top:0; left:0;
+      height:4px;
+      width:100%;
+      background: rgba(255,255,255,.10);
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      box-shadow: 0 0 18px rgba(0,224,255,.55);
+      transition: width 300ms linear;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      font-size: 1em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+    /* ====== Header ====== */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:16px;
+    }
+    .brand img{
+      width:58px;
+      height:58px;
+      object-fit:contain;
+      border-radius:16px;
+      background: rgba(255,255,255,.08);
+      padding:8px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+    .brand .t{
+      line-height:1.05;
+    }
+    .brand .t .name{
+      font-weight:800;
+      letter-spacing:.4px;
+      font-size:18px;
+    }
+    .brand .t .tag{
+      margin-top:6px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      font-weight:700;
+      color: rgba(0,0,0,.75);
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      padding:7px 12px;
+      border-radius:999px;
+      width: fit-content;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: rgba(0,0,0,.35);
     }
 
-    button {
-      width: 100%;
-      margin-top: 25px;
-      padding: 12px;
-      font-size: 1em;
-      background-color: #da6863;
-      color: white;
+    h1{
+      font-size: 28px;
+      line-height:1.15;
+      margin: 6px 0 12px;
+      letter-spacing: -.3px;
+    }
+    p{
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .highlight{
+      color: rgba(255,255,255,.92);
+      font-weight:700;
+    }
+
+    /* ====== Buttons ====== */
+    .actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:100%;
+      padding: 15px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 16.5px;
+      text-decoration:none;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.2s;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--dark);
+      box-shadow: 0 14px 30px rgba(0,224,255,.35);
+    }
+    .btn.primary:hover{ transform: translateY(-2px); box-shadow: 0 18px 38px rgba(0,224,255,.48); }
+    .btn.secondary{
+      background: rgba(255,255,255,.09);
+      color: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .btn.secondary:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+
+    /* ====== Footer info ====== */
+    .meta{
+      margin-top: 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.72);
+    }
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .pill{
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      width: fit-content;
     }
 
-    button:hover {
-      background-color: #b94e4a;
+    /* ====== Loading overlay ====== */
+    .overlay{
+      position: fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(900px 500px at 30% 20%, rgba(0,224,255,.14), transparent 60%),
+                  linear-gradient(135deg, rgba(10,18,30,.92), rgba(18,44,70,.92));
+      z-index: 9999;
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    .overlay.hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .loaderBox{
+      width:min(520px, 92%);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+      text-align:center;
+      backdrop-filter: blur(10px);
+    }
+    .loaderTitle{
+      font-weight:900;
+      font-size: 18px;
+      letter-spacing: .3px;
+      margin-bottom: 8px;
+    }
+    .loaderSub{
+      color: rgba(255,255,255,.72);
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .spinner{
+      width:42px;height:42px;
+      border-radius:50%;
+      border: 3px solid rgba(255,255,255,.22);
+      border-top-color: var(--accent1);
+      margin: 0 auto 12px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg);} }
+
+    .miniBar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .miniBar > i{
+      display:block;
+      height:100%;
+      width: 22%;
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      animation: sweep 1.2s ease-in-out infinite;
+    }
+    @keyframes sweep{
+      0%{ transform: translateX(-20%); width: 22%; opacity:.85;}
+      50%{ transform: translateX(170%); width: 38%; opacity:1;}
+      100%{ transform: translateX(320%); width: 22%; opacity:.85;}
     }
 
-    #resultado {
-      margin-top: 20px;
-      font-size: 1.2em;
-      font-weight: bold;
-      text-align: center;
-      color: #4d3069;
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important;}
     }
 
-    #acciones-finales {
-      display: none;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    #acciones-finales a {
-      display: inline-block;
-      margin: 10px 5px 0;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .btn-instagram {
-      background-color: #da6863;
-      color: white;
-    }
-
-    .btn-whatsapp {
-      background-color: #3d8fb0;
-      color: white;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
-      }
-
-      .container {
-        padding: 20px;
-      }
+    @media (max-width:480px){
+      .card{ padding: 28px 18px 18px; }
+      h1{ font-size: 24px; }
+      .brand img{ width:52px; height:52px; }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Calculadora de Puntaje Docente</h1>
-    <div class="subtitulo">Diseñada por Docentes Brown</div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
 
-    <label for="titulo">Puntaje del título (cargo o materia):</label>
-    <input type="number" id="titulo" step="0.01">
-
-    <label for="bonificaciones">Puntaje por bonificaciones:</label>
-    <input type="number" id="bonificaciones" step="0.01">
-
-    <label for="antiguedad">Antigüedad (en años):</label>
-    <input type="number" id="antiguedad" step="0.01">
-
-    <label for="calificacion1">Primera calificación anual:</label>
-    <input type="number" id="calificacion1" step="0.01" min="0" max="10">
-
-    <label for="calificacion2">Segunda calificación anual:</label>
-    <input type="number" id="calificacion2" step="0.01" min="0" max="10">
-
-    <button onclick="calcularPuntaje()">Calcular Puntaje Total</button>
-
-    <div id="resultado"></div>
-
-    <div id="acciones-finales">
-      <p>¿Te gustó esta herramienta?</p>
-      <a class="btn-instagram" href="https://instagram.com/docentesbrown" target="_blank">@docentesbrown en Instagram</a>
-      <a id="whatsapp-link" class="btn-whatsapp" href="#" target="_blank">Compartir por WhatsApp</a>
+  <!-- Loading / Welcome -->
+  <div class="overlay" id="overlay">
+    <div class="loaderBox">
+      <div class="spinner" aria-hidden="true"></div>
+      <div class="loaderTitle">DOCENTES BROWN</div>
+      <div class="loaderSub">Estamos cargando y llevándote a la plataforma oficial…</div>
+      <div class="miniBar" aria-hidden="true"><i></i></div>
     </div>
   </div>
 
-  <script>
-    function calcularPuntaje() {
-      const titulo = parseFloat(document.getElementById('titulo').value) || 0;
-      const bonificaciones = parseFloat(document.getElementById('bonificaciones').value) || 0;
-      const antiguedad = parseFloat(document.getElementById('antiguedad').value) || 0;
-      const calif1 = parseFloat(document.getElementById('calificacion1').value);
-      const calif2 = parseFloat(document.getElementById('calificacion2').value);
+  <main class="wrap">
+    <section class="card" role="region" aria-label="Redirección a la nueva aplicación">
+      <div class="bar" aria-hidden="true"><i id="topProgress"></i></div>
 
-      if (isNaN(calif1) || isNaN(calif2)) {
-        document.getElementById('resultado').textContent = "Por favor, ingresá ambas calificaciones.";
-        document.getElementById('acciones-finales').style.display = "none";
-        return;
+      <div class="brand">
+        <!-- Logo real: poné LOGO.png en la misma carpeta que este index.html -->
+        <img src="LOGO.png" alt="Logo Docentes Brown" onerror="this.style.display='none'">
+        <div class="t">
+          <div class="name">DOCENTES BROWN</div>
+          <div class="tag"><span class="dot"></span> Plataforma Oficial</div>
+        </div>
+      </div>
+
+      <h1>🚀 Nuestras apps se mudaron</h1>
+      <p>
+        Ahora todo funciona desde un único lugar: <span class="highlight">más rápido</span>, más simple y con mejores herramientas.
+        Para no perderte nada, te llevamos a la nueva web en <span class="highlight" id="count">5</span> segundos.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" id="goBtn" href="https://docentesbrown-oficial.github.io/Docentes-Brown-Oficial/" rel="noopener">
+          Ir a la nueva aplicación
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <button class="btn secondary" id="stayBtn" type="button">
+          Quiero quedarme acá por ahora
+        </button>
+      </div>
+
+      <div class="meta">
+        <div class="pillrow">
+          <div class="pill">✅ Enlace oficial verificado</div>
+          <div class="pill">📱 Optimizado para celular</div>
+          <div class="pill">⚡ Redirección automática</div>
+        </div>
+        <div>
+          Si ya entraste antes, la próxima vez te redirigimos casi al instante para que no pierdas tiempo.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const NEW_URL = "https://docentesbrown-oficial.github.io/Docentes-Brown-Oficial/";
+      const KEY = "db_redirect_seen_v1";
+
+      const overlay = document.getElementById("overlay");
+      const countEl = document.getElementById("count");
+      const goBtn = document.getElementById("goBtn");
+      const stayBtn = document.getElementById("stayBtn");
+      const topProgress = document.getElementById("topProgress");
+
+      let redirectTimer = null;
+      let countdownTimer = null;
+
+      function safeSetSeen() {
+        try { localStorage.setItem(KEY, "1"); } catch (e) {}
       }
 
-      const puntajeBase = titulo + bonificaciones + antiguedad;
-      const promedio = (calif1 + calif2) / 2;
-      const puntajeFinal = puntajeBase * promedio;
-      const puntajeTexto = puntajeFinal.toFixed(2);
+      function hasSeen() {
+        try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; }
+      }
 
-      document.getElementById('resultado').textContent = `El puntaje total es: ${puntajeTexto}`;
+      function hideOverlaySoon(ms) {
+        setTimeout(() => overlay.classList.add("hidden"), ms);
+      }
 
-      const mensaje = `Mi puntaje docente es ${puntajeTexto} calculado con la herramienta de @docentesbrown. ¡Probala vos también!`;
-      const url = "https://github.io/docentesbrown"; // Reemplazá por tu URL real
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(mensaje + " " + url)}`;
+      function goNow() {
+        safeSetSeen();
+        window.location.replace(NEW_URL);
+      }
 
-      document.getElementById('whatsapp-link').href = whatsappUrl;
-      document.getElementById('acciones-finales').style.display = "block";
-    }
+      function startCountdown(seconds) {
+        let s = seconds;
+        countEl.textContent = String(s);
+        topProgress.style.width = "0%";
+
+        const totalMs = seconds * 1000;
+        const start = Date.now();
+
+        // Barra superior animada
+        const barTick = setInterval(() => {
+          const elapsed = Date.now() - start;
+          const pct = Math.min(100, (elapsed / totalMs) * 100);
+          topProgress.style.width = pct.toFixed(1) + "%";
+          if (pct >= 100) clearInterval(barTick);
+        }, 120);
+
+        countdownTimer = setInterval(() => {
+          s -= 1;
+          if (s <= 0) {
+            clearInterval(countdownTimer);
+            goNow();
+            return;
+          }
+          countEl.textContent = String(s);
+        }, 1000);
+
+        redirectTimer = setTimeout(goNow, totalMs);
+      }
+
+      function cancelAutoRedirect() {
+        if (redirectTimer) clearTimeout(redirectTimer);
+        if (countdownTimer) clearInterval(countdownTimer);
+        topProgress.style.width = "0%";
+        countEl.textContent = "—";
+      }
+
+      // Botón: ir ahora
+      goBtn.addEventListener("click", () => safeSetSeen());
+
+      // Botón: quedarse
+      stayBtn.addEventListener("click", () => {
+        cancelAutoRedirect();
+        safeSetSeen(); // guardamos igual para que no moleste si vuelve
+        stayBtn.textContent = "Perfecto. Cuando quieras, usá el botón para ir.";
+      });
+
+      // UX: si ya entró antes -> redirección casi instantánea
+      if (hasSeen()) {
+        // overlay cortito para que no “parpadee”
+        hideOverlaySoon(220);
+        setTimeout(goNow, 600);
+      } else {
+        // primer ingreso: pequeña carga + countdown visible
+        hideOverlaySoon(900);
+        startCountdown(5);
+      }
+
+      // Fallback: si la pestaña vuelve a primer plano, reintentar countdown si corresponde
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && !hasSeen()) {
+          // no reiniciamos si ya fue cancelado (count = "—")
+          if (countEl.textContent !== "—" && !redirectTimer) startCountdown(5);
+        }
+      });
+    })();
   </script>
 </body>
 </html>
